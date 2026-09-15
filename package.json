@@ -1,0 +1,60 @@
+{
+  "name": "cesium-wind-arrows-3d",
+  "version": "0.1.7",
+  "description": "CesiumJS 三维风场箭头图层：多层 (u,v,w) 风场驱动的 3D 箭头场，WebGL2 GPGPU 实现，支持高度层切换与运行时换数据",
+  "type": "module",
+  "keywords": [
+    "cesium",
+    "wind",
+    "wind-field",
+    "3d",
+    "arrow",
+    "gpgpu",
+    "webgl2",
+    "visualization",
+    "globe"
+  ],
+  "license": "MIT",
+  "author": "TeleAgent",
+  "contributors": [
+    "rawcloud",
+    "lby0102 (数据管线移植自 cesium-wind-layer-3d, MIT)"
+  ],
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "dev:example": "vite --config example/vite.config.js",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "cesium": "^1.142.0"
+  },
+  "devDependencies": {
+    "cesium": "^1.142.0",
+    "typescript": "^5.6.3",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4",
+    "vite-plugin-static-copy": "^2.3.1",
+    "vitest": "^3.2.4"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true
+  }
+}

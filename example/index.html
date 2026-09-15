@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cesium-wind-arrows-3d 示例</title>
+  <link href="./widgets.css" rel="stylesheet">
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #050b1c; }
+    #cesiumContainer { width: 100%; height: 100%; }
+    #panel {
+      position: absolute; top: 12px; left: 12px; z-index: 9;
+      background: rgba(10, 22, 46, 0.85); border: 1px solid rgba(88, 138, 220, .35);
+      border-radius: 6px; padding: 12px 16px; color: #dce8ff;
+      font-family: "Microsoft YaHei", sans-serif; font-size: 13px; width: 240px;
+    }
+    #panel h3 { margin: 0 0 8px; font-size: 14px; letter-spacing: 1px; color: #3ed6c9; }
+    #panel label { display: block; margin: 8px 0 2px; color: #8aa0c6; }
+    #panel input[type=range] { width: 100%; }
+    #panel .val { color: #e8b84b; font-family: Consolas, monospace; }
+    #panel button {
+      margin-top: 10px; width: 100%; padding: 6px; cursor: pointer;
+      background: rgba(62, 214, 201, .12); color: #3ed6c9;
+      border: 1px solid rgba(62, 214, 201, .45); border-radius: 4px;
+    }
+    #status { color: #8aa0c6; }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <div id="panel">
+    <h3>cesium-wind-arrows-3d</h3>
+    <div id="status">加载风场数据…</div>
+    <label>高度层 <span class="val" id="heightVal">全体</span></label>
+    <input type="range" id="height" min="0" max="100" value="100">
+    <label>箭头长度 <span class="val" id="lenVal">26</span> px</label>
+    <input type="range" id="length" min="10" max="60" value="26">
+    <label>流动速度 <span class="val" id="flowVal">1500</span></label>
+    <input type="range" id="flow" min="0" max="6000" step="100" value="1500">
+    <button id="zoom">飞到数据范围</button>
+  </div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>
