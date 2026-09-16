@@ -1,18 +1,25 @@
 {
   "name": "cesium-wind-arrows-3d",
   "version": "0.1.9",
-  "description": "CesiumJS 三维风场箭头图层：多层 (u,v,w) 风场驱动的 3D 箭头场，WebGL2 GPGPU 实现，支持高度层切换与运行时换数据",
+  "description": "CesiumJS 3D wind-field arrow layer (u,v,w), WebGL2 GPGPU, height-level switching & runtime data swap | 三维风场箭头图层",
   "type": "module",
   "keywords": [
     "cesium",
+    "cesiumjs",
     "wind",
     "wind-field",
+    "wind-visualization",
     "3d",
     "arrow",
     "gpgpu",
     "webgl2",
     "visualization",
-    "globe"
+    "globe",
+    "weather",
+    "meteorology",
+    "geospatial",
+    "gis",
+    "gpu-particles"
   ],
   "license": "MIT",
   "author": "TeleAgent",
@@ -20,6 +27,17 @@
     "rawcloud",
     "lby0102 (数据管线移植自 cesium-wind-layer-3d, MIT)"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rawcloud/cesium-wind-arrows-3d.git"
+  },
+  "homepage": "https://github.com/Rawcloud/cesium-wind-arrows-3d#readme",
+  "bugs": {
+    "url": "https://github.com/Rawcloud/cesium-wind-arrows-3d/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "main": "./dist/index.umd.cjs",
   "module": "./dist/index.js",
   "types": "./dist/types/index.d.ts",
