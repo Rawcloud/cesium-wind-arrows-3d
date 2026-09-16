@@ -6,6 +6,12 @@
 
 数据契约与 [cesium-wind-layer-3d](https://www.npmjs.com/package/cesium-wind-layer-3d)（流线拖尾形态）完全一致，可互换使用——同一份数据，两种形态。
 
+## 演示
+
+<video src="./assets/demo.mp4" controls width="720"></video>
+
+> 三维风场箭头层演示：多层 `(u,v,w)` 风场驱动的 3D 箭头，含高度层切换、反算 w 俯仰角与彗尾流线。
+
 ## 特性
 
 - WebGL2 原生 3D 纹理（`sampler3D`）存储风场，硬件三线性插值

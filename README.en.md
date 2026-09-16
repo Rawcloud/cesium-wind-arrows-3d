@@ -6,6 +6,12 @@ A WebGL2-based **3D wind-field arrow layer for CesiumJS**: a 3D arrow field driv
 
 The data contract is fully compatible with [cesium-wind-layer-3d](https://www.npmjs.com/package/cesium-wind-layer-3d) (the streamline-trail form) and the two can be used interchangeably — the same data, two visual forms.
 
+## Demo
+
+<video src="./assets/demo.mp4" controls width="720"></video>
+
+> A 3D wind-field arrow layer demo: multi-level (u,v,w) wind-driven 3D arrows, with height-level switching, continuity-recovered w pitch, and comet-trail streamlines.
+
 ## Features
 
 - Native WebGL2 3D texture (`sampler3D`) stores the wind field with hardware trilinear interpolation
