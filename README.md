@@ -1,3 +1,5 @@
+> 🇬🇧 [English documentation](./README.en.md) · 中文如下
+
 # cesium-wind-arrows-3d
 
 基于 WebGL2 的 CesiumJS **三维风场箭头图层**：多层 `(u, v, w)` 风场驱动的 3D 箭头场，GPGPU 实现，**CPU 每帧零工作**。
