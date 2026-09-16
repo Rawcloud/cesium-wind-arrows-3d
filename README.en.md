@@ -37,7 +37,7 @@ Type declarations ship with the package (`dist/types`), so TypeScript projects w
 
 ```bash
 # Install the built tarball directly
-npm install ../cesium-wind-arrows-3d/cesium-wind-arrows-3d-0.1.8.tgz
+npm install ../cesium-wind-arrows-3d/cesium-wind-arrows-3d-0.1.9.tgz
 
 # Or symlink to the source (rebuild after editing lib code; no repeated packing)
 cd cesium-wind-arrows-3d && npm link

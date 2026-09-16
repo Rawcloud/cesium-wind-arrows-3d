@@ -37,7 +37,7 @@ npm install cesium-wind-arrows-3d
 
 ```bash
 # 直接装打包产物
-npm install ../cesium-wind-arrows-3d/cesium-wind-arrows-3d-0.1.8.tgz
+npm install ../cesium-wind-arrows-3d/cesium-wind-arrows-3d-0.1.9.tgz
 
 # 或软链到源码（改完库代码重新 build 即可生效，无需反复打包）
 cd cesium-wind-arrows-3d && npm link
