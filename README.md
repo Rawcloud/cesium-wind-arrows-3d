@@ -8,7 +8,7 @@
 
 ## 演示
 
-<video src="./assets/demo.mp4" controls width="720"></video>
+https://github.com/user-attachments/assets/11a8e495-c843-4cd5-a6fc-1d85a735c642
 
 > 三维风场箭头层演示：多层 `(u,v,w)` 风场驱动的 3D 箭头，含高度层切换、反算 w 俯仰角与彗尾流线。
 

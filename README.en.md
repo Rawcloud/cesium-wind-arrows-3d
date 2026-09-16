@@ -8,7 +8,7 @@ The data contract is fully compatible with [cesium-wind-layer-3d](https://www.np
 
 ## Demo
 
-<video src="./assets/demo.mp4" controls width="720"></video>
+https://github.com/user-attachments/assets/11a8e495-c843-4cd5-a6fc-1d85a735c642
 
 > A 3D wind-field arrow layer demo: multi-level (u,v,w) wind-driven 3D arrows, with height-level switching, continuity-recovered w pitch, and comet-trail streamlines.
 
