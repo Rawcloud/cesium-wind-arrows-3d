@@ -29,7 +29,7 @@ npm install cesium-wind-arrows-3d
 
 ```bash
 # 直接装打包产物
-npm install ../cesium-wind-arrows-3d/cesium-wind-arrows-3d-0.1.7.tgz
+npm install ../cesium-wind-arrows-3d/cesium-wind-arrows-3d-0.1.8.tgz
 
 # 或软链到源码（改完库代码重新 build 即可生效，无需反复打包）
 cd cesium-wind-arrows-3d && npm link
@@ -153,6 +153,33 @@ npm pack              # 生成 cesium-wind-arrows-3d-<version>.tgz
 - **开箱即用**：`cesium-wind-layer-3d` 仓库 example 自带 `wind_3d.json`（印尼区域三维风场，MIT）
 - **免费无密钥**：[Open-Meteo](https://open-meteo.com/) 气压层 API（风速+风向→换算 u/v，无 w）
 - **完整 w 分量**：ERA5（哥白尼 CDS）或 NOAA GFS GRIB2，注意气压垂直速度（Pa/s）需换算为几何 m/s
+
+## 从 Open-Meteo 接入（无 w 数据）
+
+Open-Meteo 气压层 API 只提供 u/v（风速+风向），无垂直速度 w。本包提供 `fromOpenMeteo()`，
+按**质量连续方程反算 w**（方法 2）：`∂u/∂x + ∂v/∂y + ∂ω/∂p = 0` 自顶层（ω=0）向下积分得气压坐标垂直速度 ω，
+再换算几何垂直速度 `w = -ω·R·T/(g·p)`。箭头因此带真实俯仰角，立体感最强。
+
+注意：Open-Meteo 是**单点接口**，没有边界框参数。要拿到空间网格，须把一片经纬度网格的所有
+`(lat,lon)` 组合用逗号分隔一次性请求（如 5×5=25 个点），`fromOpenMeteo` 再从响应里按唯一经纬度重建规则网格。
+请求需含每个气压层的 `wind_speed` / `wind_direction` / `temperature` / `geopotential_height`（变量名形如 `wind_speed_850hPa`）。
+
+```ts
+import { fromOpenMeteo } from "cesium-wind-arrows-3d";
+
+const lv = [1000, 925, 850, 700, 500]; // hPa，函数内部按海拔排序
+const vars = lv.flatMap((L) => [
+  `wind_speed_${L}hPa`, `wind_direction_${L}hPa`,
+  `temperature_${L}hPa`, `geopotential_height_${L}hPa`,
+]);
+const url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}` +
+  `&hourly=${vars.join(",")}&wind_speed_unit=ms&forecast_days=1`;
+
+const windData = fromOpenMeteo({ levels: lv, response: await (await fetch(url)).json(), windSpeedUnit: "ms" });
+// windData 直接传给 new WindArrowLayer(viewer, windData, {...})
+```
+
+example 页加 `?src=openmeteo` 即可一键拉取巨港（Palembang）周边 5×5×5 层网格演示（反算 w + 彗尾），并与同一座城市白模叠加。
 
 ## License
 

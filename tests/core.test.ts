@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { deepMerge, lonLatLengthMeters, computeSpeedFromComponents, normalizeWindData, seedAreaJumped } from "../src/utils";
+import { fromOpenMeteo } from "../src/openMeteo";
 import { parseCssColor, makeColorTable } from "../src/colors";
 import { buildArrowMesh, VERTS_PER_ARROW, TRIS_PER_ARROW } from "../src/arrowMesh";
 
@@ -134,6 +135,70 @@ describe("deepMerge", () => {
     const to = { a: 1, b: { c: 2 }, d: 4 };
     const r = deepMerge({ b: { c: 9 }, d: undefined } as never, to);
     expect(r).toEqual({ a: 1, b: { c: 9 }, d: 4 });
+  });
+});
+
+/** 构造一个最小的 Open-Meteo 多点气压层响应（2×2 网格 × 2 层），用于验证转换。
+ *  多点布局：hourly 变量为 外层=地点(4)、内层=时间(1) 的二维数组。 */
+function mockOpenMeteoResponse() {
+  // 2×2 网格，行优先展开：loc0(39.7,116.2) loc1(39.7,116.3) loc2(39.8,116.2) loc3(39.8,116.3)
+  // 低层(1000hPa) u 在 x 方向 +10→-10 变化 → 存在散度；顶层(500hPa)均匀 → 散度为 0
+  const lats = [39.7, 39.7, 39.8, 39.8];
+  const lons = [116.2, 116.3, 116.2, 116.3];
+  const hourly: Record<string, number[][]> = {
+    time: [[0], [0], [0], [0]],
+    wind_speed_1000hPa: [[10], [10], [10], [10]],
+    wind_direction_1000hPa: [[270], [90], [270], [90]], // 来向：270=西风(向东 u+), 90=东风(向西 u-)
+    temperature_1000hPa: [[15], [15], [15], [15]],
+    geopotential_height_1000hPa: [[100], [100], [100], [100]],
+    wind_speed_500hPa: [[10], [10], [10], [10]],
+    wind_direction_500hPa: [[270], [270], [270], [270]],
+    temperature_500hPa: [[-20], [-20], [-20], [-20]],
+    geopotential_height_500hPa: [[5500], [5500], [5500], [5500]],
+  };
+  return { latitude: lats, longitude: lons, hourly };
+}
+
+describe("fromOpenMeteo", () => {
+  it("由多点响应重建 2×2 网格并产出合法 WindData3D", () => {
+    const d = fromOpenMeteo({ levels: [1000, 500], response: mockOpenMeteoResponse(), windSpeedUnit: "ms" });
+    expect(d.nx).toBe(2);
+    expect(d.ny).toBe(2);
+    expect(d.nz).toBe(2);
+    expect(d.bounds).toEqual({ west: 116.2, south: 39.7, east: 116.3, north: 39.8 });
+    expect(d.levels.length).toBe(2);
+    expect(d.levels[0]).toBeLessThan(d.levels[1]); // 按海拔升序
+    expect(d.u.array.length).toBe(2 * 2 * 2);
+  });
+
+  it("风向(来向)换算为 u/v 去向向量", () => {
+    const d = fromOpenMeteo({ levels: [1000, 500], response: mockOpenMeteoResponse(), windSpeedUnit: "ms" });
+    // 1000hPa 点(0,0): 来向270°(西风) → 去向向东 → u>0, v=0
+    const idx = 0 * 2 * 2 + 0 * 2 + 0;
+    expect(d.u.array[idx]).toBeCloseTo(10, 5);
+    expect(Math.abs(d.v.array[idx])).toBeLessThan(1e-3);
+  });
+
+  it("低层散度反算出非零 w（连续方程链路生效）", () => {
+    const d = fromOpenMeteo({ levels: [1000, 500], response: mockOpenMeteoResponse(), windSpeedUnit: "ms" });
+    // w 应有限；低层有散度 → 至少部分 w 非零（否则反算链路失效）
+    let nonzero = 0;
+    for (let i = 0; i < d.w.array.length; i++) {
+      expect(Number.isFinite(d.w.array[i])).toBe(true);
+      if (Math.abs(d.w.array[i]) > 1e-6) nonzero++;
+    }
+    expect(nonzero).toBeGreaterThan(0);
+  });
+
+  it("单点响应（<2×2）抛错提示需网格", () => {
+    const bad = { latitude: [39.7], longitude: [116.2], hourly: mockOpenMeteoResponse().hourly };
+    expect(() => fromOpenMeteo({ levels: [1000, 500], response: bad })).toThrow(/网格/);
+  });
+
+  it("缺 geopotential_height 抛错", () => {
+    const r = mockOpenMeteoResponse();
+    delete (r.hourly as Record<string, unknown>).geopotential_height_1000hPa;
+    expect(() => fromOpenMeteo({ levels: [1000, 500], response: r })).toThrow(/geopotential_height/);
   });
 });
 
