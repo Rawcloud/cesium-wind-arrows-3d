@@ -1,6 +1,6 @@
 {
   "name": "cesium-wind-arrows-3d",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "CesiumJS 三维风场箭头图层：多层 (u,v,w) 风场驱动的 3D 箭头场，WebGL2 GPGPU 实现，支持高度层切换与运行时换数据",
   "type": "module",
   "keywords": [
